@@ -12,7 +12,7 @@ class ScanBeaconsScreen extends StatefulWidget {
 }
 
 class _ScanBeaconsScreenState extends State<ScanBeaconsScreen> {
-  StreamSubscription<List<ScanResult>?>? _scanSubscription;
+  // StreamSubscription<List<ScanResult>?>? _scanSubscription;
   Map<String, dynamic> devicesMap = {};
   List<IBeaconModel> beacons = [];
   bool scanning = false;
@@ -26,7 +26,7 @@ class _ScanBeaconsScreenState extends State<ScanBeaconsScreen> {
   @override
   void dispose() {
     FlutterBluePlus.stopScan();
-    _scanSubscription?.cancel();
+    // _scanSubscription?.cancel();
     super.dispose();
   }
 
@@ -60,7 +60,7 @@ class _ScanBeaconsScreenState extends State<ScanBeaconsScreen> {
     // Start scanning
     await FlutterBluePlus.startScan(timeout: const Duration(seconds: 4), androidUsesFineLocation: true);
 
-    _scanSubscription = FlutterBluePlus.scanResults.listen((scanResult) {
+    var _scanSubscription = FlutterBluePlus.scanResults.listen((scanResult) {
       for (var result in scanResult) {
         Map<String, dynamic> iBeaconData = convertAdvertisementDataToIBeaconData(result);
         if (iBeaconData.isNotEmpty) {
@@ -74,7 +74,7 @@ class _ScanBeaconsScreenState extends State<ScanBeaconsScreen> {
         }
       }
     });
-    FlutterBluePlus.cancelWhenScanComplete(_scanSubscription!);
+    FlutterBluePlus.cancelWhenScanComplete(_scanSubscription);
     await FlutterBluePlus.isScanning.where((value) => value == false).first;
     setState(() {
       scanning = false;
